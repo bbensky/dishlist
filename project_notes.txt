@@ -1,0 +1,28 @@
+2.28.17 Notes
+
+BRIAN
+Ingredient Entry UI:
+    Either enter an ingredient or 'd' for done #DONE
+    Enter ingredient on one line (show an example) #DONE
+    Store ingredient as a single string #DONE
+    Tags: Enter tags (breakfast, Italian) #DONE
+   
+KRISTEN    
+Eliminate Ingredient class:
+    Recipe@ingredients becomes an array
+    Adjust list of recipes data structure
+
+Further steps:
+
+Phase 1:
+Remove a recipe
+Edit a recipe
+Search by tags/title/ingredient
+Break down directions into steps
+
+Phase 2:
+Change serving size
+
+Phase 3:
+Turn this into a web app
+Transition from YAML to database

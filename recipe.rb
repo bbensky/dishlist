@@ -1,3 +1,5 @@
+require 'pry'
+
 # Display list of recipes
 # Prompt user to add a recipe
 # Recipes consist of ingredients, quantities, units of measurement
@@ -22,6 +24,10 @@ class Recipe
     @directions = recipe_hash[:directions]
     @tags = recipe_hash[:tags]
   end  
+
+  def add_title(title)
+    @title = title
+  end
   
   def add_ingredient(ingredient) 
     @ingredients << ingredient
@@ -29,6 +35,10 @@ class Recipe
   
   def add_directions(string)
     @directions = string
+  end
+
+  def add_tag(tag)
+    @tags << tag
   end
   
   def retrieve
@@ -67,10 +77,14 @@ end
 class RecipeSession
   
   def initialize
-    @recipes = List.new.read
+    # Separated out the List#read method to allow recipes to be added to the list.
+    @recipes = List.new
+    @access_recipes = @recipes.read 
+    @current_user_input = nil
   end
   
   def session
+    system 'clear'
     welcome_message
     loop do 
       display_recipes
@@ -83,6 +97,7 @@ class RecipeSession
       else
         display_single_recipe
       end
+      system 'clear'
     end
     goodbye_message
   end
@@ -92,8 +107,8 @@ class RecipeSession
     loop do
       puts "Please choose an option:"
       puts "View a recipe (Enter a recipe number)"
-      puts "Enter a new recipe (N)"
-      puts "Exit the program (Q)"
+      puts "Add a new recipe (press N)"
+      puts "Exit the program (press Q)"
       puts ""
       choice = gets.chomp.downcase
       break if valid_menu_options.include?(choice)
@@ -104,37 +119,45 @@ class RecipeSession
   
   def valid_menu_options
     menu_options = ['n', 'q']
-    (1..@recipes.count).each { |num| menu_options << num.to_s }
+    (1..@access_recipes.count).each { |num| menu_options << num.to_s }
     menu_options
   end
 
   def display_recipes
-    @recipes.each_with_index do |recipe, idx|
+    @access_recipes.each_with_index do |recipe, idx|
       puts "#{idx+1}. #{recipe[:title]}"
     end
     puts ""
   end
   
   def display_single_recipe
+    system 'clear'
     @current_recipe = Recipe.new
-    @current_recipe.info = @recipes[@choice.to_i - 1]
+    @current_recipe.info = @access_recipes[@choice.to_i - 1]
     puts @current_recipe
     puts ""
-    puts "Press Enter to return to the main menu."
-    gets.chomp
+    loop do
+      puts "Press Enter to return to the main menu."
+      answer = gets.chomp
+      break if answer.size.zero?
+      puts "Sorry, invalid answer." 
+    end
   end
   
   def enter_new_recipe
     loop do
       @new_recipe = Recipe.new
-      @new_recipe.title = user_input('recipe')
-      p @new_recipe.title
-      enter_recipe_ingredients
-      @new_recipe.add_directions(user_input('directions'))
-      @new_recipe.display
-      puts ""
-      p @new_recipe.info                            # Method no longer exists
-      @recipes << @new_recipe.info                  # Use List#add(recipe_object) instead.
+
+      @new_recipe.add_title(user_input('What is the name of the recipe?'))
+
+      enter_ingredients
+
+      @new_recipe.add_directions(user_input('What are the directions?'))
+
+      enter_tags
+      
+      @recipes.add(@new_recipe)
+
       puts "Enter another recipe? (y/n)"
       answer = nil
       loop do 
@@ -144,40 +167,55 @@ class RecipeSession
       end
       break if answer == 'n'
     end
+    puts ""
   end
   
-  def user_input(category)
+  def user_input(question)
     answer = nil
     loop do
-      puts "What is the name of the #{category}?"
+      puts question
       answer = gets.chomp
       break if !answer.length.zero? && answer[0] != ' '
-      puts "Sorry, that is not a valid #{category}."
+      puts "Sorry, that is not a valid answer."
       puts ""
     end
     puts ""
     answer
   end
   
-  def enter_recipe_ingredients
+  def enter_ingredients
+    @current_user_input = nil
     loop do
-      ingredient = Ingredient.new
-      ingredient.name = user_input('ingredient')
-      puts ""
-      ingredient.unit = user_input('unit of measurement')
-      puts ""
-      ingredient.quantity = user_input('quantity').to_f
-      puts ""
-      @new_recipe.add_ingredient(ingredient)
-      @new_recipe.display
-      puts "Enter another ingredient? (y/n)"
-      answer = nil
-      loop do 
-        answer = gets.chomp.downcase[0]
-        break if ['y', 'n'].include?(answer)
-        puts "Sorry, that is not a valid answer."
+      loop do
+        puts "Please enter an ingredient or 'd' for done."
+        puts "Example: 1/4 cup milk"
+        puts ""
+        @current_user_input = gets.chomp
+        break if !@current_user_input.length.zero? && 
+                 @current_user_input[0] != ' '
+        puts "Sorry, that is not a valid ingredient."
       end
-      break if answer == 'n'
+      break if @current_user_input == 'd' 
+      @new_recipe.add_ingredient(@current_user_input)
+      puts ""
+    end
+  end
+
+  def enter_tags
+  @current_user_input = nil
+    loop do
+      loop do
+        puts "Please enter a tag or 'd' for done."
+        puts "Example: breakfast"
+        puts ""
+        @current_user_input = gets.chomp
+        break if !@current_user_input.length.zero? && 
+                 @current_user_input[0] != ' '
+        puts "Sorry, that is not a valid tag."
+      end
+      break if @current_user_input == 'd' 
+      @new_recipe.add_tag(@current_user_input)
+      puts ""
     end
   end
   

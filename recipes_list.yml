@@ -1,0 +1,46 @@
+---
+- :title: Coffee
+  :ingredients:
+  - 8 oz water
+  - 1 tbsp coffee grounds
+  :directions: Make coffee.
+  :tags:
+  - breakfast
+  - beverages
+- :title: Teriyaki Chicken
+  :ingredients:
+  - 1/4 cup soy sauce
+  - 2 tbsp vinegar
+  - 2 tbsp vegetable oil
+  - 2 tbsp sugar or honey
+  - 1 tsp garlic, crushed
+  - 2 lbs chicken breasts or thighs
+  :directions: Mix all ingredients except chicken. Cut chicken into small pieces and
+    marinate at least 30 min. Thread onto skewers and broil 4-5 min per side.
+  :tags:
+  - dinner
+- :title: Basic Pancakes
+  :ingredients:
+  - 1 egg
+  - 1 cup flour (all-purpose or whole wheat)
+  - 2 tbsp vegetable oil
+  - 1 tbsp sugar
+  - 3/4 cup milk
+  - 3 tsp baking powder
+  - 1/4 tsp salt
+  :directions: Combine all ingredients. Heat griddle or skillet to 375 degrees F.
+    Grease with margarine or vegetable oil spray. Pour batter and cook until edges
+    are dry. Turn and cook other side.
+  :tags:
+  - breakfast
+- :title: French Toast
+  :ingredients:
+  - 1 egg
+  - 1/4 cup milk
+  - 1 teaspoon vanilla
+  - 1/2 teaspoon cinnamon
+  - 1 slice bread
+  :directions: Mix all ingredients together. Dip bread in mixture and brown on
+    both sides in buttered skillet.
+  :tags:
+  - breakfast
