@@ -1,4 +1,4 @@
-require 'pry'
+# require 'pry'
 
 # Display list of recipes
 # Prompt user to add a recipe
@@ -99,6 +99,7 @@ class RecipeSession
       end
       system 'clear'
     end
+    @recipes.write
     goodbye_message
   end
   
